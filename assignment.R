@@ -8,6 +8,8 @@ online_sales <- data.frame(
   transaction_timestamp = as.POSIXct(c("2024-04-01 08:00:00", "2024-04-01 10:00:00", "2024-04-02 09:00:00", "2024-04-02 11:00:00", "2024-04-03 08:00:00")),
   order_value = c(100, 150, 80, 200, 120)
 )
+print(online_sales)
+
 
 # Create In-Store Sales Data
 instore_sales <- data.frame(
@@ -58,8 +60,8 @@ missing_values <- sapply(merged_data, function(x) sum(is.na(x)))
 print(missing_values)
 
 # Remove duplicates
-cleaned_data <- merged_data %>%
-  distinct()
+cleaned_data <- merged_data %>% distinct()
+
 
 # Standardize formats if needed
 # For example, converting character fields to factors
@@ -75,7 +77,7 @@ print(cleaned_data)
 
 #task 4
 # Merge sales data with customer demographic data
-merged_sales_demographic <- merge(online_sales, customer_demographics, by = "customer_id", all.x = TRUE)
+merged_sales_demographic <- merge(online_sales, customer_demographics, by = "customer_id")
 
 # Print merged data
 print(merged_sales_demographic)
@@ -88,8 +90,10 @@ library(plotrix)
 summary(merged_sales_demographic)
 
 # Histogram of customer age
-hist(merged_sales_demographic$age, col = "blue", xlab = "Age", main = "Histogram of Customer Age")
-
+pie(merged_sales_demographic$order_value,
+    labels = merged_sales_demographic$age,
+    main = "Pie Chart of Order Value by Product Purchased"
+)
 # Boxplot of order value by gender
 boxplot(merged_sales_demographic$order_value ~ merged_sales_demographic$gender, col = "blue", xlab = "Gender", ylab = "Order Value", main = "Order Value by Gender")
 
@@ -132,6 +136,7 @@ if(all(merged_sales_demographic$order_value >= 0)) {
 
 # Check for consistency between age and income_level
 income_levels <- unique(merged_sales_demographic$income_level)
+
 for(level in income_levels) {
   cat("Summary statistics for age where income level is", level, ":\n")
   print(summary(merged_sales_demographic$age[merged_sales_demographic$income_level == level]))
